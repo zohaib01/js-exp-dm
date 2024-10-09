@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jsexp
+spec:
+  replicas: 2
+  strategy: 
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 50%
+  selector:
+    matchLabels:
+      app: jsexp
+  template:
+    metadata:
+      labels:
+        app: jsexp
+    spec:
+      containers:
+      - name: jsexp
+        # image: 406102979514.dkr.ecr.us-east-1.amazonaws.com/local_images:v1
+        # image: 406102979514.dkr.ecr.us-east-1.amazonaws.com/local_images:${IMAGE_TAG}
+        image: 406102979514.dkr.ecr.us-east-1.amazonaws.com/nodejs_repo:latest
+        imagePullPolicy: Always
+        # args: ['sh', '-c', 'python ./DinningBotResy\&FlaskREST.py']
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1024Mi"
+            cpu: "1000m"
+        env:
+        - name: APP_ENV
+          value: "development"
